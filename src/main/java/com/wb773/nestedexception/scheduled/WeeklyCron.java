@@ -3,6 +3,9 @@ package com.wb773.nestedexception.scheduled;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.wb773.nestedexception.service.BookingService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -15,15 +18,20 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class WeeklyCron {
 
-    @Scheduled(fixedRate = 1000)
+    @Autowired
+    BookingService bookingService;
+
+    @Scheduled(fixedRate = 10000)
     public void execute() {
         log.info("hello WeeklyCron");
+        bookingService.book("persons");
     }
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+    @Scheduled(fixedRate = 50000)
+    public void executeList() {
 
-    @Scheduled(fixedRate = 5000)
-    public void reportCurrentTime() {
-        log.info("The time is now {}", dateFormat.format(new Date()));
+        log.info(String.join(",", bookingService.findAllBookings()));
+        ;
     }
+
 }
